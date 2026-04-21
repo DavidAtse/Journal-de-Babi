@@ -1,0 +1,113 @@
+body {
+    font-family: Arial;
+    background: #f4f4f4;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.article {
+    background: white;
+    padding: 15px;
+    margin: 10px auto;
+    width: 60%;
+    border-radius: 10px;
+}
+
+
+/* admin.php */
+form {
+    width: 50%;
+    margin: auto;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+}
+
+button { 
+    padding: 8px 12px; 
+    border: none; 
+    color: white; 
+    cursor: pointer; 
+    border-radius: 5px; 
+}
+
+button[name="delete"] { 
+    background: red; 
+}
+
+/* Style de la page login */
+.login-container {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    width: 300px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+button {
+    padding: 10px;
+    width: 100%;
+    background: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.error { 
+    color: red; text-align: center; margin-bottom: 10px; 
+}
+
+/* ======================================== */
+/* Style global index.php */
+body { 
+    font-family: Arial; 
+    background: #f9f9f9; 
+    margin:0; 
+    padding:0; 
+}
+
+header { 
+    background: #000; 
+    color: white; 
+    padding: 15px; 
+    text-align: center; 
+}
+
+h1 { 
+    margin: 0; 
+} 
+
+/* --------------------- */
+/* Section articles */
+.articles-container { 
+    width: 90%; 
+    margin: auto; 
+    margin-top: 20px; 
+}
+
+.article-card {
+    background: white; 
+    padding: 15px; 
+    margin-bottom: 20px;
+    border-radius: 10px; 
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.article-card img { 
+    max-width: 100%; 
+    height: auto; 
+    display: block; 
+    margin-bottom: 10px; 
+} 
+
