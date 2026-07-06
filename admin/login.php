@@ -3,24 +3,50 @@
     include("../config.php");
     session_start();
 
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+
+    // Anti brute-force basique : limite les tentatives par fenêtre de temps
+    $maxAttempts = 5;
+    $lockSeconds = 60;
+    if (!isset($_SESSION['login_attempts'])) { $_SESSION['login_attempts'] = 0; }
+    if (!isset($_SESSION['login_first_attempt'])) { $_SESSION['login_first_attempt'] = time(); }
+
+    if (time() - $_SESSION['login_first_attempt'] > $lockSeconds) {
+        $_SESSION['login_attempts'] = 0;
+        $_SESSION['login_first_attempt'] = time();
+    }
+
     if(isset($_POST['login'])) {
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-
-        // Vérifier dans la base
-        $stmt = $conn->prepare("SELECT * FROM admin WHERE username = ? AND password = SHA2(?, 256)");
-        $stmt->bind_param("ss", $username, $password);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if($result->num_rows == 1) {
-            $_SESSION['admin'] = $username; // Stocke la session admin
-            header("Location: admin.php"); // Redirige vers admin
-            exit();
+        if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
+            $error = "❌ Requête invalide, veuillez réessayer";
+        } elseif ($_SESSION['login_attempts'] >= $maxAttempts) {
+            $error = "❌ Trop de tentatives, réessayez dans quelques instants";
         } else {
-            $error = "❌ Identifiants incorrects";
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+
+            // Vérifier dans la base
+            $stmt = $conn->prepare("SELECT * FROM admin WHERE username = ?");
+            $stmt->bind_param("s", $username);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $admin = $result->fetch_assoc();
+
+            if($admin && password_verify($password, $admin['password'])) {
+                session_regenerate_id(true); // Empêche la fixation de session
+                $_SESSION['admin'] = $username; // Stocke la session admin
+                $_SESSION['login_attempts'] = 0;
+                unset($_SESSION['csrf_token']);
+                header("Location: admin.php"); // Redirige vers admin
+                exit();
+            } else {
+                $_SESSION['login_attempts']++;
+                $error = "❌ Identifiants incorrects";
+            }
+            $stmt->close();
         }
-        $stmt->close();
     }
 ?>
 
@@ -41,6 +67,7 @@
     <?php if(isset($error)) { echo "<div class='error'>$error</div>"; } ?>
 
     <form method="POST">
+        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8'); ?>">
         <input type="text" name="username" placeholder="Nom d'utilisateur" required>
         <input type="password" name="password" placeholder="Mot de passe" required>
         <button type="submit" name="login">Se connecter</button>

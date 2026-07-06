@@ -1,0 +1,4 @@
+# Fichier ads.txt requis par Google AdSense.
+# Une fois votre compte approuvé, remplacez la ligne ci-dessous par celle donnée
+# dans votre tableau de bord AdSense (Sites > ads.txt), en général :
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

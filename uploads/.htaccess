@@ -1,0 +1,7 @@
+# Empêche l'exécution de scripts dans le dossier des uploads
+<FilesMatch "\.(php|php\d|phtml|pht|phar|cgi|pl|py|asp|aspx|sh)$">
+    Require all denied
+</FilesMatch>
+
+Options -ExecCGI
+php_flag engine off

@@ -22,9 +22,11 @@ if(isset($_GET['q']) && !empty($_GET['q'])) {
 
     if($result->num_rows > 0){
         while($row = $result->fetch_assoc()) {
+            $safeId = (int)$row['id'];
+            $safeTitre = htmlspecialchars($row['titre'], ENT_QUOTES, 'UTF-8');
             echo "<div class='suggestion-item'
-                    onclick=\"window.location.href='article.php?id=".$row['id']."'\">
-                    ".$row['titre']."
+                    onclick=\"window.location.href='article.php?id=".$safeId."'\">
+                    ".$safeTitre."
                   </div>";
         }
     } else {

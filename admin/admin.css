@@ -110,7 +110,7 @@ body > h1:first-of-type::before {
     color: var(--success);
 }
 
-.message:has(❌) {
+.message.error {
     border-color: var(--danger);
     background: rgba(255,77,109,.08);
     color: var(--danger);

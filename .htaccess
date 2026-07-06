@@ -1,0 +1,44 @@
+# Bloque l'accès direct aux fichiers sensibles
+<FilesMatch "\.(sql|env|log|ini)$">
+    Require all denied
+</FilesMatch>
+
+<Files "config.php">
+    Require all denied
+</Files>
+
+<Files "mail_config.php">
+    Require all denied
+</Files>
+
+<Files "mail_config.sample.php">
+    Require all denied
+</Files>
+
+<Files "push_config.php">
+    Require all denied
+</Files>
+
+<Files "push_config.sample.php">
+    Require all denied
+</Files>
+
+<Files "adsense_config.php">
+    Require all denied
+</Files>
+
+<Files "adsense_config.sample.php">
+    Require all denied
+</Files>
+
+<Files "sw.js">
+    Header set Cache-Control "no-cache"
+</Files>
+
+<Files "composer.json">
+    Require all denied
+</Files>
+
+<Files "composer.lock">
+    Require all denied
+</Files>

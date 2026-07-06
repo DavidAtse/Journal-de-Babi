@@ -1,0 +1,19 @@
+{
+    "name": "Journal de Babi",
+    "short_name": "J. de Babi",
+    "description": "L'actualité d'Abidjan et d'ailleurs : buzz, sport, éducation et plus.",
+    "start_url": "/index.php",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#F7F4EF",
+    "theme_color": "#C0392B",
+    "lang": "fr",
+    "icons": [
+        {
+            "src": "uploads/Logo-site.png",
+            "sizes": "1408x768",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ]
+}
