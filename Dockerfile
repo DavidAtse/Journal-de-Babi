@@ -1,14 +1,8 @@
-FROM php:8.2-apache
+FROM webdevops/php-apache:8.2
 
-ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+ENV WEB_DOCUMENT_ROOT=/app
+ENV APACHE_ALLOW_OVERRIDE=1
 
-RUN chmod +x /usr/local/bin/install-php-extensions \
-    && install-php-extensions mysqli \
-    && a2enmod rewrite \
-    && sed -ri 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
-
-COPY . /var/www/html/
-
-RUN chown -R www-data:www-data /var/www/html
+COPY . /app
 
 EXPOSE 80
