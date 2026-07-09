@@ -4,13 +4,32 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Minishlink\WebPush\WebPush;
 use Minishlink\WebPush\Subscription;
 
+function chargerVapidConfig(): ?array
+{
+    $publicKey = getenv('VAPID_PUBLIC_KEY') ?: null;
+    $privateKey = getenv('VAPID_PRIVATE_KEY') ?: null;
+    $subject = getenv('VAPID_SUBJECT') ?: null;
+
+    if ((!$publicKey || !$privateKey || !$subject) && file_exists(__DIR__ . '/../push_config.php')) {
+        require_once __DIR__ . '/../push_config.php';
+        $publicKey = $publicKey ?: VAPID_PUBLIC_KEY;
+        $privateKey = $privateKey ?: VAPID_PRIVATE_KEY;
+        $subject = $subject ?: VAPID_SUBJECT;
+    }
+
+    if (!$publicKey || !$privateKey || !$subject) {
+        return null; // Les notifications push ne sont pas encore configurées
+    }
+
+    return ['publicKey' => $publicKey, 'privateKey' => $privateKey, 'subject' => $subject];
+}
+
 function envoyerNotificationNouvelArticle(mysqli $conn, string $titre, int $articleId): void
 {
-    $pushConfigFile = __DIR__ . '/../push_config.php';
-    if (!file_exists($pushConfigFile)) {
-        return; // Les notifications push ne sont pas encore configurées
+    $vapid = chargerVapidConfig();
+    if ($vapid === null) {
+        return;
     }
-    require_once $pushConfigFile;
 
     $result = $conn->query("SELECT id, endpoint, p256dh, auth_token FROM push_subscriptions");
     if (!$result || $result->num_rows === 0) {
@@ -19,9 +38,9 @@ function envoyerNotificationNouvelArticle(mysqli $conn, string $titre, int $arti
 
     $webPush = new WebPush([
         'VAPID' => [
-            'subject'    => VAPID_SUBJECT,
-            'publicKey'  => VAPID_PUBLIC_KEY,
-            'privateKey' => VAPID_PRIVATE_KEY,
+            'subject'    => $vapid['subject'],
+            'publicKey'  => $vapid['publicKey'],
+            'privateKey' => $vapid['privateKey'],
         ],
     ]);
 

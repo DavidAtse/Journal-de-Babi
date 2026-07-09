@@ -31,26 +31,34 @@ if(isset($_POST['submit'])) {
     }
 
     if (empty($errors)) {
-        $mailConfigFile = __DIR__ . '/mail_config.php';
+        // Variables Voisilab en priorité, sinon fichier local (XAMPP)
+        $smtpUsername = getenv('SMTP_USERNAME') ?: null;
+        $smtpPassword = getenv('SMTP_PASSWORD') ?: null;
+        $contactReceiver = getenv('CONTACT_RECEIVER') ?: null;
 
-        if (!file_exists($mailConfigFile)) {
+        if ((!$smtpUsername || !$smtpPassword || !$contactReceiver) && file_exists(__DIR__ . '/mail_config.php')) {
+            require __DIR__ . '/mail_config.php';
+            $smtpUsername = $smtpUsername ?: SMTP_USERNAME;
+            $smtpPassword = $smtpPassword ?: SMTP_PASSWORD;
+            $contactReceiver = $contactReceiver ?: CONTACT_RECEIVER;
+        }
+
+        if (!$smtpUsername || !$smtpPassword || !$contactReceiver) {
             $errors[] = "L'envoi d'email n'est pas encore configuré sur le serveur.";
         } else {
-            require $mailConfigFile;
-
             $mail = new PHPMailer(true);
             try {
                 $mail->isSMTP();
                 $mail->Host       = 'smtp.gmail.com';
                 $mail->SMTPAuth   = true;
-                $mail->Username   = SMTP_USERNAME;
-                $mail->Password   = SMTP_PASSWORD;
+                $mail->Username   = $smtpUsername;
+                $mail->Password   = $smtpPassword;
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port       = 587;
                 $mail->CharSet    = 'UTF-8';
 
-                $mail->setFrom(SMTP_USERNAME, 'Journal de Babi - Formulaire de contact');
-                $mail->addAddress(CONTACT_RECEIVER);
+                $mail->setFrom($smtpUsername, 'Journal de Babi - Formulaire de contact');
+                $mail->addAddress($contactReceiver);
                 $mail->addReplyTo($email, $nom);
 
                 $mail->isHTML(true);

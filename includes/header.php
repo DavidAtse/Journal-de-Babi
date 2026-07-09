@@ -8,9 +8,9 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#C0392B">
     <script src="js/push.js" defer></script>
-    <?php if (file_exists(__DIR__ . '/../adsense_config.php')): ?>
-        <?php require_once __DIR__ . '/../adsense_config.php'; ?>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-<?php echo htmlspecialchars(ADSENSE_CLIENT_ID, ENT_QUOTES, 'UTF-8'); ?>" crossorigin="anonymous"></script>
+    <?php require_once __DIR__ . '/adsense_helper.php'; $adsenseClientId = obtenirAdsenseClientId(); ?>
+    <?php if ($adsenseClientId): ?>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-<?php echo htmlspecialchars($adsenseClientId, ENT_QUOTES, 'UTF-8'); ?>" crossorigin="anonymous"></script>
     <?php endif; ?>
 </head>
 <body>

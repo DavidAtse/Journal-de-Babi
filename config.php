@@ -16,10 +16,11 @@ if ($isLocal) {
     $dbname = "journal_babi";
 } else {
     // ── PRODUCTION (Voisilab) ──────────────────────────────────────────────
-    $host = "voisilab-data-mysql";
-    $user = "u_journal_de_babi_452d25";
-    $password = "EIKudg4gCZ3neYOQz6r7JFvc";
-    $dbname = "db_journal_de_babi_452d25";
+    // Renseignées dans l'onglet "Variables" du projet Voisilab.
+    $host = getenv('DB_HOST') ?: 'voisilab-data-mysql';
+    $user = getenv('DB_USER') ?: '';
+    $password = getenv('DB_PASSWORD') ?: '';
+    $dbname = getenv('DB_NAME') ?: '';
 }
 
 // Connexion à MySQL

@@ -1,4 +1,12 @@
 <?php
-require __DIR__ . '/../push_config.php';
+require_once __DIR__ . '/../includes/push_helper.php';
+
+$vapid = chargerVapidConfig();
 header('Content-Type: text/plain');
-echo VAPID_PUBLIC_KEY;
+
+if ($vapid === null) {
+    http_response_code(404);
+    exit;
+}
+
+echo $vapid['publicKey'];
